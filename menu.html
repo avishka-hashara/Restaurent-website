@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Menu - MealMate</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="food_management/menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Theme Toggle System - Load before body -->
+    <script src="theme-toggle.js"></script>
+
+    <style>
+        /* === Footer Styles === */
+        footer {
+            background-color: var(--footer-bg);
+            backdrop-filter: blur(10px);
+            border-top: 2px solid var(--border-color);
+            padding: 50px 30px 20px;
+            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .footer-container {
+            width: 0 auto;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 220px;
+            text-align: center;
+        }
+
+        .footer-section h3 {
+            color: var(--accent-primary);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 18px;
+            position: relative;
+            padding-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background-color: var(--accent-primary);
+            border-radius: 2px;
+        }
+
+        .footer-section p,
+        .footer-section ul,
+        .footer-section a {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-primary);
+        }
+
+        .footer-logo {
+            color: var(--accent-primary);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: inline-block;
+            position: relative;
+            padding-bottom: 6px;
+            width: 100%;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid var(--footer-border);
+            padding-top: 20px;
+            margin-top: 40px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Header overrides */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background-color: var(--header-bg);
+            box-shadow: 0 4px 6px var(--shadow-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        .main-nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            margin-left: 30px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav a:hover, .main-nav a.active {
+            color: var(--accent-primary);
+        }
+
+        .menu-btn {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        .side-nav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 2000;
+            top: 0;
+            right: 0;
+            background-color: var(--header-bg);
+            overflow-x: hidden;
+            transition: 0.3s;
+            padding-top: 60px;
+            box-shadow: -2px 0 5px var(--shadow-color);
+        }
+
+        .side-nav a {
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 18px;
+            color: var(--text-primary);
+            display: block;
+            transition: 0.3s;
+        }
+
+        .side-nav a:hover {
+            color: var(--accent-primary);
+            background-color: var(--bg-color);
+        }
+
+        @media (max-width: 768px) {
+            .main-nav {
+                display: none;
+            }
+            .menu-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body class="menu-page">
+    
+    <header>
+        <a href="index.html" class="logo">MealMate</a>
+        
+        <nav class="main-nav internal-nav">
+            <a href="index.html">HOME</a>
+            <a href="menu.html" class="active">MENU</a>
+        </nav>
+
+        <div class="menu-btn" id="menuBtn" onclick="document.getElementById('sideNav').style.width = '250px'"><i class="fas fa-bars"></i></div>
+    </header>
+
+    <div id="sideNav" class="side-nav">
+        <a href="javascript:void(0)" class="closebtn" onclick="document.getElementById('sideNav').style.width = '0'">&times;</a>
+        <a href="index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="menu.html"><i class="fas fa-utensils"></i> Menu</a>
+    </div>
+
+    <!-- Beautiful Confirmation Modal -->
+    <div class="confirmation-modal" id="confirmationModal">
+        <div class="confirmation-content">
+            <button class="close-confirm-btn" onclick="hideConfirmationModal()" aria-label="Close">&times;</button>
+            <div class="confirmation-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="confirmation-title">Remove Item</h3>
+            <p class="confirmation-message" id="confirmationMessage">Are you sure you want to remove this item from your cart?</p>
+            <div class="confirmation-buttons">
+                <button class="confirm-btn" id="confirmRemove">Yes, Remove</button>
+                <button class="cancel-btn" id="cancelRemove">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="sliding-cart-overlay" onclick="toggleCart()"></div>
+
+    <div id="sliding-cart">
+        <div class="cart-header">
+            <h2>Your Cart</h2>
+            <button class="close-cart-btn" onclick="toggleCart()" aria-label="Close cart">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="cart-items-container">
+            <p class="empty-cart-message">Your cart is empty.</p>
+        </div>
+        <div class="cart-total-section">
+            <span>Total:</span>
+            <span class="total-price" id="cart-total-price">Rs.0.00</span>
+        </div>
+        <a href="#" onclick="alert('Checkout is disabled in this static demo version.');" class="btn-checkout">Proceed to Checkout</a>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h2>🍕 Food Menu</h2>
+            <p>Discover our delicious offerings</p>
+            
+            <!-- Search Control -->
+            <div class="menu-controls">
+                <div class="search-box">
+                    <input type="text" id="menuSearch" placeholder="Search for your favorite dish..." aria-label="Search menu">
+                    <i class="fas fa-search"></i>
+                </div>
+            </div>
+            
+            <!-- Category Button Bar -->
+            <div class="category-buttons">
+                <button class="category-btn active" data-category="all">
+                    🍽️ All Menu
+                </button>
+                <button class="category-btn" data-category="burgers-and-sandwiches">
+                    🍔 Burgers & Sandwiches
+                </button>
+                <button class="category-btn" data-category="pizzas">
+                    🍕 Pizzas
+                </button>
+                <button class="category-btn" data-category="pastas">
+                    🍝 Pastas
+                </button>
+                <button class="category-btn" data-category="appetizers">
+                    🍟 Appetizers
+                </button>
+                <button class="category-btn" data-category="desserts">
+                    🍰 Desserts
+                </button>
+            </div>
+            
+            <div class="cart-icon" id="main-cart-icon" onclick="toggleCart()" aria-label="Open cart">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+        </div>
+
+        <!-- No Results Message -->
+        <div class="no-results" id="noResultsMessage">
+            <i class="fas fa-search"></i>
+            <p>No items found matching your search.</p>
+        </div>
+
+        <!-- SEEDED DATA -->
+        <!-- Burgers -->
+        <div class="category-section" id="burgers-and-sandwiches" data-category="burgers-and-sandwiches">
+            <h2 class="category-title">🍔 Burgers and Sandwiches</h2>
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <div class="food-image">
+                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Classic Burger">
+                    </div>
+                    <h3>Classic Cheeseburger</h3>
+                    <p>Juicy beef patty with melted cheese, fresh lettuce, and tomato.</p>
+                    <div class="item-footer">
+                        <span class="price">Rs.500.00</span>
+                        <button class="add-to-cart" onclick="alert('Item added to local cart! (Static Demo)');">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="menu-item">
+                    <div class="food-image">
+                        <img src="https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Chicken Sandwich">
+                    </div>
+                    <h3>Crispy Chicken Sandwich</h3>
+                    <p>Crispy fried chicken breast with spicy mayo and pickles.</p>
+                    <div class="item-footer">
+                        <span class="price">Rs.450.00</span>
+                        <button class="add-to-cart" onclick="alert('Item added to local cart! (Static Demo)');">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pizzas -->
+        <div class="category-section" id="pizzas" data-category="pizzas">
+            <h2 class="category-title">🍕 Pizzas</h2>
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <div class="food-image">
+                        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Margherita Pizza">
+                    </div>
+                    <h3>Margherita Pizza</h3>
+                    <p>Classic delight with 100% real mozzarella cheese.</p>
+                    <div class="item-footer">
+                        <span class="price">Rs.1200.00</span>
+                        <button class="add-to-cart" onclick="alert('Item added to local cart! (Static Demo)');">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="menu-item">
+                    <div class="food-image">
+                        <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Pepperoni Pizza">
+                    </div>
+                    <h3>Pepperoni Pizza</h3>
+                    <p>Loaded with pepperoni and extra cheese.</p>
+                    <div class="item-footer">
+                        <span class="price">Rs.1500.00</span>
+                        <button class="add-to-cart" onclick="alert('Item added to local cart! (Static Demo)');">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pastas -->
+        <div class="category-section" id="pastas" data-category="pastas">
+            <h2 class="category-title">🍝 Pastas</h2>
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <div class="food-image">
+                        <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Spaghetti Bolognese">
+                    </div>
+                    <h3>Spaghetti Bolognese</h3>
+                    <p>Rich and hearty meat sauce with perfectly cooked spaghetti.</p>
+                    <div class="item-footer">
+                        <span class="price">Rs.800.00</span>
+                        <button class="add-to-cart" onclick="alert('Item added to local cart! (Static Demo)');">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appetizers -->
+        <div class="category-section" id="appetizers" data-category="appetizers">
+            <h2 class="category-title">🍟 Appetizers</h2>
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <div class="food-image">
+                        <img src="https://images.unsplash.com/photo-1576107232684-1279f390859f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="French Fries">
+                    </div>
+                    <h3>Crispy French Fries</h3>
+                    <p>Golden brown, perfectly salted fries.</p>
+                    <div class="item-footer">
+                        <span class="price">Rs.300.00</span>
+                        <button class="add-to-cart" onclick="alert('Item added to local cart! (Static Demo)');">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desserts -->
+        <div class="category-section" id="desserts" data-category="desserts">
+            <h2 class="category-title">🍰 Desserts</h2>
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <div class="food-image">
+                        <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60" alt="Chocolate Cake">
+                    </div>
+                    <h3>Decadent Chocolate Cake</h3>
+                    <p>Rich, moist chocolate cake with fudge frosting.</p>
+                    <div class="item-footer">
+                        <span class="price">Rs.600.00</span>
+                        <button class="add-to-cart" onclick="alert('Item added to local cart! (Static Demo)');">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Theme Toggle Button -->
+    <div class="theme-toggle-container">
+        <button class="theme-toggle-btn" aria-label="Toggle theme" title="Switch theme">
+            <i class="fas fa-sun theme-icon sun-icon"></i>
+            <i class="fas fa-moon theme-icon moon-icon"></i>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <!-- About Section -->
+            <div class="footer-section">
+                <h1 class="footer-logo">MealMate</h1>
+                <p>Your ultimate destination for delicious food delivered right to your doorstep. We are committed to
+                    providing the best dining experience.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <!-- Quick Links Section -->
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="menu.html">Menu</a></li>
+                    <li><a href="#">Orders</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p><strong>Address:</strong><br>123 Foodie Street,<br>Cuisine City, 12345</p>
+                <p><strong>Phone:</strong> 091 1234567</p>
+                <p><strong>Email:</strong> info@mealmate.com</p>
+            </div>
+
+            <!-- Working Hours Section -->
+            <div class="footer-section">
+                <h3>Working Hours</h3>
+                <p>
+                    Monday - Friday: 9am - 10pm<br>
+                    Saturday: 10am - 11pm<br>
+                    Sunday: 10am - 9pm
+                </p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            &copy; 2024 MealMate. All rights reserved. (Demo Static Build)
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="food_management/menu.js"></script>
+</body>
+</html>
